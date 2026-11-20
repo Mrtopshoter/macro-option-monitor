@@ -69,7 +69,7 @@ DEALER_FLOW_SCALING = 0.062
 
 
 def http_get_text(url: str, timeout: int = 15, retries: int = 3) -> str:
-    hdrs = HEADERS_YAHOO if "yahoo.com" in url else HEADERS_CBOE
+    hdrs = HEADERS_YAHOO if ("yahoo.com" in url or "cnbc.com" in url) else HEADERS_CBOE
     last_err: Optional[Exception] = None
     for attempt in range(1, retries + 1):
         try:
@@ -81,6 +81,36 @@ def http_get_text(url: str, timeout: int = 15, retries: int = 3) -> str:
             if attempt < retries:
                 time.sleep(1.2 * attempt)
     raise RuntimeError(f"GET failed after {retries} attempts ({url}): {last_err}") from last_err
+
+
+def fetch_cnbc_realtime_quotes() -> Dict[str, Any]:
+    syms = ".SPX|NVDA|.VIX|.VVIX|.VIX9D|.VIX3M|.DSPX|.VIXEQ|.COR1M"
+    url = (
+        "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol"
+        f"?symbols={urllib.parse.quote(syms)}&requestMethod=itv&noform=1&partnerId=2"
+        "&fund=1&exthrs=1&output=json"
+    )
+    out: Dict[str, Any] = {}
+    try:
+        payload = json.loads(http_get_text(url, timeout=8, retries=2))
+        items = payload.get("FormattedQuoteResult", {}).get("FormattedQuote", [])
+        if isinstance(items, dict):
+            items = [items]
+        for item in items:
+            sym = str(item.get("symbol", "")).strip()
+            raw_last = str(item.get("last", "")).replace(",", "").strip()
+            if not sym or not raw_last:
+                continue
+            val = float(raw_last)
+            if val > 0 and math.isfinite(val):
+                out[sym] = {
+                    "price": round(val, 2),
+                    "time": str(item.get("last_time") or ""),
+                    "status": str(item.get("curmktstatus") or ""),
+                }
+    except Exception:
+        pass
+    return out
 
 
 def parse_cboe_csv(key: str, url: str) -> Tuple[str, Dict[str, float]]:
@@ -496,22 +526,45 @@ def build_dataset() -> Dict[str, Any]:
         val, _ = latest_val(ck, yf_sym, default)
         return val
 
-    vix_aligned = aligned_or_latest("VIX", "^VIX", 28.44)
-    # 如果当日盘中有更新的 VIX，使用最新盘中 VIX 或对齐日 VIX
-    vix_live = round(float(yf_vix_latest), 2) if yf_vix_latest else vix_aligned
-    vix9d_live = aligned_or_latest("VIX9D", "^VIX9D", 29.26)
-    vix3m_live = aligned_or_latest("VIX3M", "^VIX3M", 27.03)
-    vvix_live = aligned_or_latest("VVIX", "^VVIX", 127.10)
-    skew_live = aligned_or_latest("SKEW", "^SKEW", 140.86)
-    dspx_official = aligned_or_latest("DSPX", "^DSPX", 37.16)
-    vixeq_live = aligned_or_latest("VIXEQ", "^VIXEQ", 46.87)
-    cor1m_live = aligned_or_latest("COR1M", "^COR1M", 30.22)
-    cor3m_live = cboe_series.get("COR3M", {}).get(aligned_date, 32.5)
+    # 叠加 0 延迟 CNBC 盘中实时逐笔报价（消除 Cboe 免费 CDN 的 15 分钟延迟与日内未结算盲区）
+    rt_quotes = fetch_cnbc_realtime_quotes()
+    if rt_quotes:
+        print(f"  ✓ CNBC 0延迟实时流已接入 ({len(rt_quotes)} 个核心标的实时覆盖)")
 
-    # 用同日对齐的 VIX 计算比率，消除跨日时间错位误差
-    vix_vix3m_ratio = round(vix_aligned / vix3m_live, 3) if vix3m_live else 1.05
-    vix9d_vix_ratio = round(vix9d_live / vix_aligned, 3) if vix_aligned else 1.03
-    vixeq_vix_ratio = round(vixeq_live / vix_aligned, 2) if vix_aligned else 1.65
+    if "NVDA" in rt_quotes:
+        nvda_spot = rt_quotes["NVDA"]["price"]
+        nvda_vs_sma50_pct = round(((nvda_spot - nvda_sma50) / nvda_sma50) * 100.0, 2) if nvda_sma50 else 0.0
+        nvda_dd60_pct = round(((nvda_spot - nvda_high60) / nvda_high60) * 100.0, 2) if nvda_high60 else 0.0
+
+    if ".SPX" in rt_quotes:
+        spx_rt = rt_quotes[".SPX"]["price"]
+        spx_chain["spot"] = spx_rt
+        if spx_chain.get("gammaFlipStrike"):
+            spx_chain["spotVsFlipPct"] = round(
+                ((spx_rt - spx_chain["gammaFlipStrike"]) / spx_chain["gammaFlipStrike"]) * 100.0, 2
+            )
+
+    vix_aligned = aligned_or_latest("VIX", "^VIX", 28.44)
+    vix_live = rt_quotes.get(".VIX", {}).get("price") or (
+        round(float(yf_vix_latest), 2) if yf_vix_latest else vix_aligned
+    )
+    vix9d_live = rt_quotes.get(".VIX9D", {}).get("price") or aligned_or_latest("VIX9D", "^VIX9D", 29.26)
+    vix3m_live = rt_quotes.get(".VIX3M", {}).get("price") or aligned_or_latest("VIX3M", "^VIX3M", 27.03)
+    vvix_live = rt_quotes.get(".VVIX", {}).get("price") or aligned_or_latest("VVIX", "^VVIX", 127.10)
+    skew_live = aligned_or_latest("SKEW", "^SKEW", 140.86)
+    dspx_official = rt_quotes.get(".DSPX", {}).get("price") or aligned_or_latest("DSPX", "^DSPX", 37.16)
+    vixeq_live = rt_quotes.get(".VIXEQ", {}).get("price") or aligned_or_latest("VIXEQ", "^VIXEQ", 46.87)
+    cor1m_live = rt_quotes.get(".COR1M", {}).get("price") or aligned_or_latest("COR1M", "^COR1M", 30.22)
+    cor3m_live = cboe_series.get("COR3M", {}).get(aligned_date, 25.34)
+
+    rt_vix_time = rt_quotes.get(".VIX", {}).get("time", "")
+    if len(rt_vix_time) >= 10:
+        intraday_vix_date = rt_vix_time[:10]
+
+    # 用实时同口径 VIX 计算各项期限与离散比率
+    vix_vix3m_ratio = round(vix_live / vix3m_live, 3) if vix3m_live else 1.05
+    vix9d_vix_ratio = round(vix9d_live / vix_live, 3) if vix_live else 1.03
+    vixeq_vix_ratio = round(vixeq_live / vix_live, 2) if vix_live else 1.65
 
     # 构建最近 65 个交易日的真实历史时序（供前端绘制真实历史演化曲线，而非纯静态单日截面）
     hist_dates = sorted_common[-65:] if len(sorted_common) >= 10 else sorted_common

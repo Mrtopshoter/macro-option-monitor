@@ -1,25 +1,25 @@
 {
-  "generatedAt": "2026-11-20 20:59:20",
+  "generatedAt": "2026-11-20 23:56 BJT (10:56 ET)",
   "alignedIndexDate": "2026-11-19",
   "intradayVixDate": "2026-11-20",
   "putCallDate": "2026-11-19",
   "marketContext": {
-    "spxSpot": 7175.83,
-    "nvdaSpot": 144.72,
+    "spxSpot": 7088.1,
+    "nvdaSpot": 136.72,
     "nvdaSma50": 208.86,
     "nvdaHigh60": 239.24,
-    "nvdaVsSma50Pct": -30.71,
-    "nvdaDrawdown60Pct": -39.51,
+    "nvdaVsSma50Pct": -34.54,
+    "nvdaDrawdown60Pct": -42.85,
     "vixCloseAligned": 28.44,
-    "vixLive": 30.78,
-    "vix9d": 29.26,
-    "vix3m": 27.03,
-    "vvix": 127.1,
+    "vixLive": 30.17,
+    "vix9d": 30.46,
+    "vix3m": 28.09,
+    "vvix": 129.33,
     "skew": 140.86,
-    "dspxOfficial": 37.16,
-    "dspxImpliedFromFormula": 37.33,
-    "vixeq": 46.87,
-    "cor1m": 30.22,
+    "dspxOfficial": 39.22,
+    "dspxImpliedFromFormula": 36.97,
+    "vixeq": 49.49,
+    "cor1m": 31.82,
     "cor3m": 25.34,
     "pcEquity5d": 0.68,
     "pcTotal5d": 0.97,
@@ -28,243 +28,243 @@
     "pcVix": 1.1
   },
   "spxChain": {
-    "timestamp": "2026-11-20 12:58:17",
-    "lastTradeTime": "2026-11-19T16:14:59",
-    "spot": 7175.83,
-    "activeContracts": 19289,
-    "rawNetGexB": -131.4,
-    "rawCallGexB": 143.6,
-    "rawPutGexB": -275.1,
-    "effectiveDealerGammaB": -8.15,
+    "timestamp": "2026-11-20 15:55:25",
+    "lastTradeTime": "2026-11-20T10:40:23",
+    "spot": 7088.1,
+    "activeContracts": 18863,
+    "rawNetGexB": -98.8,
+    "rawCallGexB": 135.5,
+    "rawPutGexB": -234.3,
+    "effectiveDealerGammaB": -6.13,
     "dealerScalingFactor": 0.062,
-    "gammaFlipStrike": 7654.0,
-    "spotVsFlipPct": -6.25,
+    "gammaFlipStrike": 7659.0,
+    "spotVsFlipPct": -7.45,
     "putWall": 7000.0,
     "callWall": 7700.0,
-    "nearestExpiry": "2026-11-19",
-    "nearTermGammaSharePct": 17.0,
-    "estVannaPerVolPtB": -0.57,
+    "nearestExpiry": "2026-11-20",
+    "nearTermGammaSharePct": 8.6,
+    "estVannaPerVolPtB": -0.51,
     "strikeBuckets": [
+      {
+        "strike": 6400,
+        "callGex": 0.009,
+        "putGex": -0.135,
+        "netGex": -0.126,
+        "rawNetGex": -2.03
+      },
       {
         "strike": 6450,
         "callGex": 0.005,
-        "putGex": -0.055,
-        "netGex": -0.05,
-        "rawNetGex": -0.8
+        "putGex": -0.054,
+        "netGex": -0.049,
+        "rawNetGex": -0.79
       },
       {
         "strike": 6500,
         "callGex": 0.029,
-        "putGex": -0.253,
-        "netGex": -0.224,
-        "rawNetGex": -3.61
+        "putGex": -0.245,
+        "netGex": -0.217,
+        "rawNetGex": -3.5
       },
       {
         "strike": 6550,
         "callGex": 0.006,
-        "putGex": -0.078,
-        "netGex": -0.072,
-        "rawNetGex": -1.16
+        "putGex": -0.077,
+        "netGex": -0.07,
+        "rawNetGex": -1.13
       },
       {
         "strike": 6600,
         "callGex": 0.025,
-        "putGex": -0.159,
-        "netGex": -0.133,
-        "rawNetGex": -2.15
+        "putGex": -0.148,
+        "netGex": -0.123,
+        "rawNetGex": -1.98
       },
       {
         "strike": 6650,
-        "callGex": 0.013,
-        "putGex": -0.084,
-        "netGex": -0.071,
-        "rawNetGex": -1.14
+        "callGex": 0.012,
+        "putGex": -0.081,
+        "netGex": -0.069,
+        "rawNetGex": -1.11
       },
       {
         "strike": 6700,
         "callGex": 0.038,
-        "putGex": -0.183,
-        "netGex": -0.144,
-        "rawNetGex": -2.33
+        "putGex": -0.177,
+        "netGex": -0.139,
+        "rawNetGex": -2.24
       },
       {
         "strike": 6750,
         "callGex": 0.021,
-        "putGex": -0.174,
-        "netGex": -0.153,
-        "rawNetGex": -2.47
+        "putGex": -0.169,
+        "netGex": -0.148,
+        "rawNetGex": -2.39
       },
       {
         "strike": 6800,
-        "callGex": 0.081,
-        "putGex": -0.324,
-        "netGex": -0.243,
-        "rawNetGex": -3.92
+        "callGex": 0.077,
+        "putGex": -0.309,
+        "netGex": -0.232,
+        "rawNetGex": -3.73
       },
       {
         "strike": 6850,
-        "callGex": 0.083,
-        "putGex": -0.228,
-        "netGex": -0.145,
-        "rawNetGex": -2.33
+        "callGex": 0.081,
+        "putGex": -0.213,
+        "netGex": -0.132,
+        "rawNetGex": -2.14
       },
       {
         "strike": 6900,
-        "callGex": 0.109,
-        "putGex": -0.381,
-        "netGex": -0.272,
-        "rawNetGex": -4.39
+        "callGex": 0.105,
+        "putGex": -0.355,
+        "netGex": -0.249,
+        "rawNetGex": -4.02
       },
       {
         "strike": 6950,
         "callGex": 0.062,
-        "putGex": -0.352,
-        "netGex": -0.29,
-        "rawNetGex": -4.68
+        "putGex": -0.335,
+        "netGex": -0.273,
+        "rawNetGex": -4.4
       },
       {
         "strike": 7000,
-        "callGex": 2.099,
-        "putGex": -2.684,
-        "netGex": -0.585,
-        "rawNetGex": -9.44
+        "callGex": 1.976,
+        "putGex": -2.535,
+        "netGex": -0.559,
+        "rawNetGex": -9.02
       },
       {
         "strike": 7050,
-        "callGex": 0.052,
-        "putGex": -0.579,
-        "netGex": -0.527,
-        "rawNetGex": -8.5
+        "callGex": 0.03,
+        "putGex": -0.515,
+        "netGex": -0.486,
+        "rawNetGex": -7.83
       },
       {
         "strike": 7100,
-        "callGex": 0.165,
-        "putGex": -1.526,
-        "netGex": -1.361,
-        "rawNetGex": -21.95
+        "callGex": 0.077,
+        "putGex": -0.702,
+        "netGex": -0.625,
+        "rawNetGex": -10.08
       },
       {
         "strike": 7150,
-        "callGex": 0.14,
-        "putGex": -0.934,
-        "netGex": -0.794,
-        "rawNetGex": -12.81
+        "callGex": 0.082,
+        "putGex": -0.655,
+        "netGex": -0.573,
+        "rawNetGex": -9.25
       },
       {
         "strike": 7200,
-        "callGex": 0.267,
-        "putGex": -1.687,
-        "netGex": -1.42,
-        "rawNetGex": -22.91
+        "callGex": 0.255,
+        "putGex": -0.739,
+        "netGex": -0.484,
+        "rawNetGex": -7.8
       },
       {
         "strike": 7250,
-        "callGex": 0.167,
-        "putGex": -0.639,
-        "netGex": -0.472,
-        "rawNetGex": -7.61
+        "callGex": 0.162,
+        "putGex": -0.654,
+        "netGex": -0.493,
+        "rawNetGex": -7.95
       },
       {
         "strike": 7300,
-        "callGex": 0.245,
-        "putGex": -0.744,
-        "netGex": -0.499,
-        "rawNetGex": -8.05
+        "callGex": 0.232,
+        "putGex": -0.73,
+        "netGex": -0.498,
+        "rawNetGex": -8.03
       },
       {
         "strike": 7350,
-        "callGex": 0.315,
-        "putGex": -0.531,
+        "callGex": 0.298,
+        "putGex": -0.513,
         "netGex": -0.215,
-        "rawNetGex": -3.48
+        "rawNetGex": -3.46
       },
       {
         "strike": 7400,
-        "callGex": 0.358,
-        "putGex": -0.573,
+        "callGex": 0.336,
+        "putGex": -0.551,
         "netGex": -0.215,
-        "rawNetGex": -3.47
+        "rawNetGex": -3.46
       },
       {
         "strike": 7450,
-        "callGex": 0.262,
-        "putGex": -0.359,
+        "callGex": 0.251,
+        "putGex": -0.349,
+        "netGex": -0.098,
+        "rawNetGex": -1.58
+      },
+      {
+        "strike": 7500,
+        "callGex": 0.352,
+        "putGex": -0.45,
         "netGex": -0.097,
         "rawNetGex": -1.57
       },
       {
-        "strike": 7500,
-        "callGex": 0.371,
-        "putGex": -0.463,
-        "netGex": -0.092,
-        "rawNetGex": -1.48
-      },
-      {
         "strike": 7550,
-        "callGex": 0.217,
-        "putGex": -0.283,
-        "netGex": -0.067,
-        "rawNetGex": -1.08
+        "callGex": 0.202,
+        "putGex": -0.273,
+        "netGex": -0.071,
+        "rawNetGex": -1.15
       },
       {
         "strike": 7600,
-        "callGex": 0.34,
-        "putGex": -0.369,
-        "netGex": -0.029,
-        "rawNetGex": -0.47
+        "callGex": 0.327,
+        "putGex": -0.359,
+        "netGex": -0.032,
+        "rawNetGex": -0.52
       },
       {
         "strike": 7650,
-        "callGex": 0.226,
-        "putGex": -0.229,
-        "netGex": -0.003,
-        "rawNetGex": -0.04
+        "callGex": 0.216,
+        "putGex": -0.223,
+        "netGex": -0.007,
+        "rawNetGex": -0.12
       },
       {
         "strike": 7700,
-        "callGex": 0.374,
-        "putGex": -0.34,
-        "netGex": 0.034,
-        "rawNetGex": 0.55
-      },
-      {
-        "strike": 7750,
-        "callGex": 0.224,
-        "putGex": -0.198,
-        "netGex": 0.026,
-        "rawNetGex": 0.42
+        "callGex": 0.365,
+        "putGex": -0.332,
+        "netGex": 0.033,
+        "rawNetGex": 0.54
       }
     ],
     "expiryBreakdown": [
       {
-        "expiry": "2026-11-19",
-        "sharePct": 3.8,
-        "effNetGamma": -0.97
-      },
-      {
         "expiry": "2026-11-20",
-        "sharePct": 13.2,
-        "effNetGamma": -2.28
+        "sharePct": 6.7,
+        "effNetGamma": -1.12
       },
       {
         "expiry": "2026-11-23",
-        "sharePct": 1.7,
-        "effNetGamma": -0.3
+        "sharePct": 1.9,
+        "effNetGamma": -0.32
       },
       {
         "expiry": "2026-11-24",
-        "sharePct": 1.3,
-        "effNetGamma": -0.21
+        "sharePct": 1.5,
+        "effNetGamma": -0.22
       },
       {
         "expiry": "2026-11-25",
-        "sharePct": 1.2,
-        "effNetGamma": -0.19
+        "sharePct": 1.3,
+        "effNetGamma": -0.2
       },
       {
         "expiry": "2026-11-27",
-        "sharePct": 2.5,
-        "effNetGamma": -0.42
+        "sharePct": 2.8,
+        "effNetGamma": -0.43
+      },
+      {
+        "expiry": "2026-11-30",
+        "sharePct": 2.7,
+        "effNetGamma": -0.41
       }
     ]
   },
@@ -1460,23 +1460,23 @@
   "scenarios": {
     "live": {
       "label": "最新实盘 (2026-11-20 实时拉取)",
-      "note": "Cboe 结算基准日 2026-11-19 + Yahoo 盘中最新 VIX (2026-11-20: 30.78) + Cboe P/C (2026-11-19) + SPX 期权链 (19,289 张活跃合约)",
-      "officialDspx": 37.16,
+      "note": "Cboe 结算基准日 2026-11-19 + Yahoo 盘中最新 VIX (2026-11-20: 30.17) + Cboe P/C (2026-11-19) + SPX 期权链 (18,863 张活跃合约)",
+      "officialDspx": 39.22,
       "values": {
-        "cor1m": 30.22,
-        "vixeqVix": 1.65,
-        "nvdaVsSma50": -30.71,
-        "vix": 30.78,
-        "vvix": 127.1,
-        "vixVix3m": 1.14,
-        "vix9dVix": 1.029,
+        "cor1m": 31.82,
+        "vixeqVix": 1.64,
+        "nvdaVsSma50": -34.54,
+        "vix": 30.17,
+        "vvix": 129.33,
+        "vixVix3m": 1.07,
+        "vix9dVix": 1.01,
         "skew": 140.86,
         "pcEquity": 0.62,
         "pcTotal": 1.01,
         "pcIndex": 1.2,
-        "dealerGamma": -8.15,
-        "spotVsFlipPct": -6.25,
-        "nearGammaShare": 17.0
+        "dealerGamma": -6.13,
+        "spotVsFlipPct": -7.45,
+        "nearGammaShare": 8.6
       }
     },
     "pre_opex_1118": {
@@ -1486,7 +1486,7 @@
       "values": {
         "cor1m": 30.2,
         "vixeqVix": 1.65,
-        "nvdaVsSma50": -30.71,
+        "nvdaVsSma50": -34.54,
         "vix": 28.4,
         "vvix": 122.0,
         "vixVix3m": 1.05,
@@ -1497,7 +1497,7 @@
         "pcIndex": 1.14,
         "dealerGamma": -7.3,
         "spotVsFlipPct": -6.1,
-        "nearGammaShare": 17.0
+        "nearGammaShare": 8.6
       }
     },
     "stage1": {
