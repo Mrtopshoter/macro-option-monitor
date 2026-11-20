@@ -1,0 +1,61 @@
+name: Sync Cboe & Yahoo Market Data to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+  schedule:
+    # 美股盘前至盘后（周一至周五 UTC 13:00-22:40，对应美东 08:00-17:40）每 20 分钟自动拉取一次
+    - cron: "*/20 13-22 * * 1-5"
+    # 美股每日期权与指数官方结算后汇总更新（UTC 23:30，对应美东 18:30）
+    - cron: "30 23 * * 1-5"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch latest Cboe & Yahoo market data
+        run: |
+          python3 update_data.py || echo "Warning: Live fetch encountered transient error; falling back to latest committed snapshot."
+
+      - name: Assemble static site bundle
+        run: |
+          mkdir -p _site/data
+          cp index.html _site/index.html
+          if [ -f google_sites_embed.html ]; then
+            cp google_sites_embed.html _site/google_sites_embed.html
+          fi
+          cp data/latest_market_data.json _site/data/latest_market_data.json
+          touch _site/.nojekyll
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "_site"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
