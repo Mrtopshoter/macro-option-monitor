@@ -32,7 +32,6 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 JSON_OUT = DATA_DIR / "latest_market_data.json"
 HTML_OUT = BASE_DIR / "index.html"
-GOOGLE_SITES_HTML_OUT = BASE_DIR / "google_sites_embed.html"
 
 HEADERS_CBOE = {
     "User-Agent": (
@@ -756,22 +755,6 @@ def inject_into_html(dataset: Dict[str, Any], html_path: Path = HTML_OUT) -> boo
     return True
 
 
-def export_compact_google_sites_html(src_html: Path = HTML_OUT, dst_html: Path = GOOGLE_SITES_HTML_OUT) -> bool:
-    if not src_html.exists():
-        return False
-    content = src_html.read_text(encoding="utf-8")
-    start_tag = "/* __EMBEDDED_DATA_START__ */"
-    end_tag = "/* __EMBEDDED_DATA_END__ */"
-    if start_tag in content and end_tag in content:
-        s_idx = content.index(start_tag)
-        e_idx = content.index(end_tag) + len(end_tag)
-        # Google Sites 嵌入代码框存在字符长度上限，保留精简壳并由前端自动拉取 GitHub Pages 实时 JSON
-        compact_block = f"{start_tag}\nwindow.__INITIAL_MARKET_DATA__ = null;\n{end_tag}"
-        content = content[:s_idx] + compact_block + content[e_idx:]
-    dst_html.write_text(content, encoding="utf-8")
-    return True
-
-
 def main() -> int:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     dataset = build_dataset()
@@ -779,8 +762,6 @@ def main() -> int:
     print(f"\n[完成] 真实市场数据包已保存至: {JSON_OUT}")
     if inject_into_html(dataset):
         print(f"[完成] 已同步更新内嵌离线快照至: {HTML_OUT}")
-    if export_compact_google_sites_html():
-        print(f"[完成] 已生成轻量级 Google Sites 嵌入专用页: {GOOGLE_SITES_HTML_OUT}")
     return 0
 
 

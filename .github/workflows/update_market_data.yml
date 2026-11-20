@@ -42,9 +42,6 @@ jobs:
         run: |
           mkdir -p _site/data
           cp index.html _site/index.html
-          if [ -f google_sites_embed.html ]; then
-            cp google_sites_embed.html _site/google_sites_embed.html
-          fi
           cp data/latest_market_data.json _site/data/latest_market_data.json
           touch _site/.nojekyll
 

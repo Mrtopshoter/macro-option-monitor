@@ -2115,7 +2115,7 @@ window.__INITIAL_MARKET_DATA__ = {"generatedAt":"2026-11-20 20:59:20","alignedIn
         document.getElementById('chk-reset-summary').textContent = `修复满足: ${resetCnt} / 4`;
       }
 
-      // GitHub Pages 云端实时数据源地址（原生支持跨域 CORS，供 Google Sites 与外网页面实时拉取）
+      // GitHub Pages 云端实时数据源地址
       const REMOTE_JSON_URL = 'https://mrtopshoter.github.io/macro-option-monitor/data/latest_market_data.json';
 
       function applyIncomingDataset(newData) {
@@ -2133,7 +2133,7 @@ window.__INITIAL_MARKET_DATA__ = {"generatedAt":"2026-11-20 20:59:20","alignedIn
         return true;
       }
 
-      // 在线同步最新实盘数据（自动识别本地 server.py / GitHub Pages / Google Sites 跨域内嵌）
+      // 在线同步最新实盘数据（自动识别本地 server.py 与 GitHub Pages 云端模式）
       async function syncLiveMarketData(silentAuto = false) {
         const btn = document.getElementById('btn-sync-live');
         const host = window.location.hostname || '';
@@ -2157,7 +2157,7 @@ window.__INITIAL_MARKET_DATA__ = {"generatedAt":"2026-11-20 20:59:20","alignedIn
             }
           }
 
-          // 云端模式（Google Sites 内嵌框 / GitHub Pages）：直接拉取 GitHub Actions 定时生成的最新 JSON
+          // 云端模式（GitHub Pages）：直接拉取 GitHub Actions 定时生成的最新 JSON
           const remoteResp = await fetch(`${REMOTE_JSON_URL}?t=${Date.now()}`, {
             method: 'GET',
             cache: 'no-store'
@@ -2172,9 +2172,9 @@ window.__INITIAL_MARKET_DATA__ = {"generatedAt":"2026-11-20 20:59:20","alignedIn
         } catch (err) {
           if (!silentAuto) {
             if (window.location.protocol === 'file:') {
-              showToast('当前为本地离线文件模式（已加载内嵌实盘快照）。首次推送到 GitHub 开启 Pages 后即可云端同步。');
+              showToast('当前为本地离线文件模式（已加载内嵌实盘快照）。');
             } else {
-              showToast('暂未连通云端数据源（请确认 GitHub Pages 已开启并完成首次 Actions 构建），当前展示内置实盘快照。');
+              showToast('暂未连通云端数据源，当前展示内置实盘快照。');
             }
           }
         } finally {
@@ -2212,7 +2212,7 @@ window.__INITIAL_MARKET_DATA__ = {"generatedAt":"2026-11-20 20:59:20","alignedIn
 
         updateAll();
 
-        // 在 Google Sites 或公网环境下：打开页面即刻静默拉取云端最新 JSON，并每 5 分钟自动后台轮询更新
+        // 公网环境下：打开页面即刻静默拉取云端最新 JSON，并每 5 分钟自动后台轮询更新
         const host = window.location.hostname || '';
         const isLocal = host === '127.0.0.1' || host === 'localhost' || window.location.protocol === 'file:';
         if (!isLocal) {
