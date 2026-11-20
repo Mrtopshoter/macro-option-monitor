@@ -754,9 +754,11 @@
             <span class="meta-sep">|</span>
             <span>NVDA: <strong id="hdr-nvda" style="color:var(--text)">--</strong> (<span id="hdr-nvda-ma">--</span> vs 50D MA)</span>
             <span class="meta-sep">|</span>
-            <span>Cboe 指数结算日: <strong id="hdr-idx-date">--</strong> · 盘中 VIX: <strong id="hdr-vix-live">--</strong></span>
+            <span>实时 VIX: <strong id="hdr-vix-live">--</strong></span>
             <span class="meta-sep">|</span>
-            <span>数据源: Cboe Exchange Official CSV/JSON &amp; SPX 全量期权链</span>
+            <span>GEX期权链快照: <strong id="hdr-gex-time">--</strong></span>
+            <span class="meta-sep">|</span>
+            <span>日终结算(SKEW/PC): <strong id="hdr-idx-date">--</strong></span>
           </div>
         </div>
 
@@ -1886,7 +1888,8 @@ window.__INITIAL_MARKET_DATA__ = {"generatedAt":"2026-11-20 23:56 BJT (10:56 ET)
         document.getElementById('hdr-nvda').textContent = mc.nvdaSpot ? `$${mc.nvdaSpot.toFixed(2)}` : '--';
         const maSign = (mc.nvdaVsSma50Pct || 0) >= 0 ? '+' : '';
         document.getElementById('hdr-nvda-ma').textContent = `${maSign}${(mc.nvdaVsSma50Pct || 0).toFixed(1)}%`;
-        document.getElementById('hdr-idx-date').textContent = dataset.alignedIndexDate || '--';
+        document.getElementById('hdr-idx-date').textContent = dataset.putCallDate || dataset.alignedIndexDate || '--';
+        document.getElementById('hdr-gex-time').textContent = chain.timestamp ? chain.timestamp.slice(5, 16) + ' UTC' : '--';
         document.getElementById('hdr-vix-live').textContent = mc.vixLive ? mc.vixLive.toFixed(2) : '--';
 
         // 情景按钮高亮与备注
@@ -2200,13 +2203,48 @@ window.__INITIAL_MARKET_DATA__ = {"generatedAt":"2026-11-20 23:56 BJT (10:56 ET)
         }
 
         if (latestTickTime) {
+          const tickDate = latestTickTime.slice(0, 10);
           const etClock = latestTickTime.slice(11, 19);
-          dataset.generatedAt = `0延迟实时逐笔 ${etClock} ET`;
+          dataset.generatedAt = `0延迟逐笔 ${tickDate} ${etClock} ET`;
+          if (dataset.scenarios && dataset.scenarios.live) {
+            dataset.scenarios.live.label = `最新实盘 (${tickDate} 实时逐笔)`;
+            dataset.scenarios.live.note =
+              `浏览器 0 延迟实时逐笔 (${tickDate} ${etClock} ET: SPX ${mc.spxSpot?.toFixed(2)}, VIX ${mc.vixLive?.toFixed(2)}, COR1M ${mc.cor1m?.toFixed(2)}) ` +
+              `+ SPX 期权链快照 (${(chain.activeContracts || 0).toLocaleString()} 张合约, ${chain.timestamp || ''}) ` +
+              `+ Cboe 日终结算 P/C & SKEW (${dataset.putCallDate || dataset.alignedIndexDate || ''})`;
+          }
+          // 将当日实时点追加/刷新至 65 日演化曲线最末端，保证历史图右端同步跳动
+          if (Array.isArray(dataset.history) && dataset.history.length && vLive) {
+            const lastRow = dataset.history[dataset.history.length - 1];
+            const livePoint = {
+              date: tickDate,
+              spx: mc.spxSpot || lastRow.spx,
+              nvda: mc.nvdaSpot || lastRow.nvda,
+              vix: vLive,
+              vix9d: mc.vix9d || lastRow.vix9d,
+              vix3m: mc.vix3m || lastRow.vix3m,
+              vvix: mc.vvix || lastRow.vvix,
+              skew: lastRow.skew,
+              dspx: mc.dspxOfficial || lastRow.dspx,
+              vixeq: mc.vixeq || lastRow.vixeq,
+              cor1m: mc.cor1m || lastRow.cor1m,
+              vixVix3m: mc.vix3m ? Number((vLive / mc.vix3m).toFixed(3)) : lastRow.vixVix3m,
+              vix9dVix: mc.vix9d ? Number((mc.vix9d / vLive).toFixed(3)) : lastRow.vix9dVix,
+              vixeqVix: mc.vixeq ? Number((mc.vixeq / vLive).toFixed(2)) : lastRow.vixeqVix,
+              dspxImplied: mc.dspxImpliedFromFormula || lastRow.dspxImplied
+            };
+            if (lastRow.date === tickDate) {
+              dataset.history[dataset.history.length - 1] = livePoint;
+            } else if (tickDate > lastRow.date) {
+              dataset.history.push(livePoint);
+            }
+          }
         }
 
         if (activeScenarioKey === 'live' && liveVals) {
           state = { ...liveVals };
         }
+        renderScenarioButtons();
         refreshStaticChainAndHistoryCharts();
         updateAll();
         return true;
